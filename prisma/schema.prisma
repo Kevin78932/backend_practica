@@ -1,0 +1,35 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Estudiante {
+  id         Int         @id @default(autoincrement())
+  nombre     String
+  email      String      @unique
+  matriculas Matricula[]
+}
+
+model Curso {
+  id         Int         @id @default(autoincrement())
+  titulo     String
+  descripcion String
+  matriculas Matricula[]
+}
+
+model Matricula {
+  id          Int      @id @default(autoincrement())
+  estudiante  Estudiante @relation(fields: [estudianteId], references: [id])
+  estudianteId Int
+
+  curso       Curso     @relation(fields: [cursoId], references: [id])
+  cursoId     Int
+
+  fecha       DateTime  @default(now())
+}
